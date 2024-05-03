@@ -40,5 +40,5 @@ public interface Repository<T, K> {
      * @param key the key of the data
      * @throws NullPointerException if the key is {@code null}
      */
-    void delete(K key);
+    void delete(@NonNull K key);
 }
