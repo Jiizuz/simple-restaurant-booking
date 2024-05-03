@@ -45,6 +45,14 @@ public class BookingController {
             .create();
 
     /**
+     * {@link Gson} to serialize and deserialize the requests and responses in a pretty format.
+     */
+    private final Gson gsonPretty = new GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .setPrettyPrinting()
+            .create();
+
+    /**
      * Creates a booking (reserves a table) for the customer.
      * The request must contain the customer name, the table size and the date and time of the booking.
      *
@@ -223,7 +231,50 @@ public class BookingController {
      * @param pathParams the path parameters of the request
      */
     public void getBookings(final @NonNull MuRequest request, final @NonNull MuResponse response, final @NonNull Map<String, String> pathParams) {
+        if (!validQuery(request, response)) {
+            return;
+        }
+        final Instant date = Instant.parse(request.query().get("date") + "T00:00:00Z");
+        final boolean pretty = request.query().contains("pretty");
+        final Gson gsonToFormat = pretty ? gsonPretty : gson;
 
+        final Set<Booking> bookings = bookingRepository.getBookingsOfDay(date);
+
+        response.write(gsonToFormat.toJson(bookings));
+    }
+
+    /**
+     * Validates the query to get the bookings.
+     *
+     * <p>If the request is not valid, the response will be sent to the client.
+     *
+     * @param request  the request to validate
+     * @param response the response to send to the client
+     * @return whether the query is valid
+     */
+    public boolean validQuery(final @NonNull MuRequest request, final @NonNull MuResponse response) {
+        final String date = request.query().get("date");
+
+        // validate the date
+        if (date == null || date.isEmpty()) {
+            response.status(400);
+            response.write(Response.of("The date is required.", false).toJson(gson));
+            return false;
+        }
+        if (date.length() != 10) {
+            response.status(400);
+            response.write(Response.of("The date must be in the format yyyy-MM-dd.", false).toJson(gson));
+            return false;
+        }
+        try {
+            Instant.parse(date + "T00:00:00Z");
+        } catch (DateTimeParseException exception) {
+            response.status(400);
+            response.write(Response.of("The date is invalid.", false).toJson(gson));
+            return false;
+        }
+
+        return true;
     }
 
     /**
