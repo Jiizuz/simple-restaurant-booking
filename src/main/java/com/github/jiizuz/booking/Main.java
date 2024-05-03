@@ -5,6 +5,7 @@ import com.github.jiizuz.booking.routes.Router;
 import io.muserver.MuServerBuilder;
 import lombok.experimental.UtilityClass;
 
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -45,6 +46,9 @@ public class Main {
         // Create the server builder
         final MuServerBuilder serverBuilder = MuServerBuilder.httpServer();
 
+        // Set up the server configuration
+        serverBuilder.withInterface("localhost").withHttpPort(8080);
+
         // Set up the routes
         final Router[] routers = {
                 new BookingRouter(),
@@ -52,7 +56,15 @@ public class Main {
 
         Stream.of(routers).forEach(router -> router.setupRoutes(serverBuilder));
 
+        // Retrieve the server information before starting it
+        final String host = serverBuilder.interfaceHost();
+        final int port = serverBuilder.httpPort();
+
         // Start the server
         serverBuilder.start();
+
+        System.out.println("=========================================");
+        System.out.println("Server started at http://" + host + ":" + port + "/");
+        System.out.println("=========================================");
     }
 }
