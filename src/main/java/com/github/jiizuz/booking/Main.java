@@ -5,7 +5,6 @@ import com.github.jiizuz.booking.routes.Router;
 import io.muserver.MuServerBuilder;
 import lombok.experimental.UtilityClass;
 
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -29,6 +28,11 @@ public class Main {
     // - The restaurant has 10 tables.
     // - The restaurant can only take one booking at a time per table.
     // - The tables have a maximum capacity of 10 people.
+    // - The application can accept bookings for any day, even if the day has passed.
+    // (To allow the restaurant to store bookings that happened previously)
+    // - The restaurant has no problem with bookings happening even 1 second before the reservation time.
+    // (While the restaurant is open and the table is available)
+    // - The restaurant operates in a single timezone (UTC).
 
     /**
      * Main method of the application.
