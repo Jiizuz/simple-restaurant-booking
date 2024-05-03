@@ -38,7 +38,8 @@ public interface Repository<T, K> {
      * Deletes data from the repository.
      *
      * @param key the key of the data
+     * @return the deleted data
      * @throws NullPointerException if the key is {@code null}
      */
-    void delete(@NonNull K key);
+    T delete(@NonNull K key);
 }
