@@ -1,6 +1,9 @@
 package com.github.jiizuz.booking.routes;
 
+import com.github.jiizuz.booking.controller.BookingController;
+import io.muserver.Method;
 import io.muserver.MuServerBuilder;
+import io.muserver.Routes;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
@@ -18,5 +21,9 @@ public final class BookingRouter implements Router {
      */
     @Override
     public void setupRoutes(final @NonNull MuServerBuilder builder) {
+        final BookingController controller = new BookingController();
+
+        builder.addHandler(Routes.route(Method.POST, "/booking", controller::createBooking));
+        builder.addHandler(Routes.route(Method.GET, "/booking", controller::getBookings));
     }
 }
