@@ -30,11 +30,11 @@ public interface BookingRepository extends Repository<Booking, String> {
     Set<Booking> getBookingsOfDay(@NonNull Instant date);
 
     /**
-     * Returns all the bookings between two dates.
+     * Returns all the bookings between two instants.
      *
      * <p>The bookings are sorted by the time of the booking.
      *
-     * <p>The time of the given {@link Instant Instants} are ignored.
+     * <p>The time of the given {@link Instant Instants} is considered in the filtering.
      *
      * @param start the start instant
      * @param end   the end instant
