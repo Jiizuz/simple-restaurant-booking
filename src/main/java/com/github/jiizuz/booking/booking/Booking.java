@@ -13,6 +13,14 @@ import java.time.Instant;
 public interface Booking {
 
     /**
+     * Returns the UniqueId of the booking.
+     *
+     * @return the UniqueId of the booking
+     * @apiNote The UniqueId can be {@code null} if the booking is not persisted.
+     */
+    String getId();
+
+    /**
      * Returns the name of the customer that made the booking.
      *
      * @return the name of the customer

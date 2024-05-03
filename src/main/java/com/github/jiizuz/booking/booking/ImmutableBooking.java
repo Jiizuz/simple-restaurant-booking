@@ -1,8 +1,6 @@
 package com.github.jiizuz.booking.booking;
 
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -14,8 +12,15 @@ import java.time.Instant;
  * @since 1.0
  */
 @Data
-@RequiredArgsConstructor(staticName = "of")
+@Builder
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ImmutableBooking implements Booking {
+
+    /**
+     * The UniqueId of the booking. Can be {@code null} if the booking is not persisted.
+     */
+    @Builder.Default
+    private final String id = null;
 
     /**
      * The name of the customer that made the booking.
