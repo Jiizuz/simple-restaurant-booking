@@ -230,7 +230,7 @@ public class BookingController {
      * @param response   the response to send to the client
      * @param pathParams the path parameters of the request
      */
-    public void getBookings(final @NonNull MuRequest request, final @NonNull MuResponse response, final @NonNull Map<String, String> pathParams) {
+    public void getBookingsOfDay(final @NonNull MuRequest request, final @NonNull MuResponse response, final @NonNull Map<String, String> pathParams) {
         if (!validQuery(request, response)) {
             return;
         }

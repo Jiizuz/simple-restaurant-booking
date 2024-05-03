@@ -24,6 +24,6 @@ public final class BookingRouter implements Router {
         final BookingController controller = new BookingController();
 
         builder.addHandler(Routes.route(Method.POST, "/booking", controller::createBooking));
-        builder.addHandler(Routes.route(Method.GET, "/booking", controller::getBookings));
+        builder.addHandler(Routes.route(Method.GET, "/booking", controller::getBookingsOfDay));
     }
 }
