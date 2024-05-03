@@ -33,6 +33,8 @@ public class Main {
     // - The restaurant has no problem with bookings happening even 1 second before the reservation time.
     // (While the restaurant is open and the table is available)
     // - The restaurant operates in a single timezone (UTC).
+    // - The restaurant has no troubles with customers seeing the bookings of other customers.
+    // - The restaurant has no troubles with customers booking multiple tables.
 
     /**
      * Main method of the application.
