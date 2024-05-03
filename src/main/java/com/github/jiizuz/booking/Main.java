@@ -47,6 +47,7 @@ public class Main {
 
         // Set up the routes
         final Router[] routers = {
+                new BookingRouter(),
         };
 
         Stream.of(routers).forEach(router -> router.setupRoutes(serverBuilder));
