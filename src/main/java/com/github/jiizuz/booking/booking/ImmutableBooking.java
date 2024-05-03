@@ -32,11 +32,13 @@ public final class ImmutableBooking implements Booking {
     /**
      * The size of the table that the customer wants to book.
      */
+    @With
     private final int tableSize;
 
     /**
      * The date and time of the booking.
      */
+    @With
     @NonNull
     private final Instant date;
 
