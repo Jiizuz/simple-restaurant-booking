@@ -2,6 +2,8 @@ package com.github.jiizuz.booking.data;
 
 import lombok.NonNull;
 
+import java.util.Collection;
+
 /**
  * Represents a repository that handles the data.
  *
@@ -42,4 +44,13 @@ public interface Repository<T, K> {
      * @throws NullPointerException if the key is {@code null}
      */
     T delete(@NonNull K key);
+
+    /**
+     * Retrieves all the data from the repository.
+     *
+     * @return the collection of all the data
+     * @apiNote The collection does not have any specific order.
+     */
+    @NonNull
+    Collection<T> getAll();
 }

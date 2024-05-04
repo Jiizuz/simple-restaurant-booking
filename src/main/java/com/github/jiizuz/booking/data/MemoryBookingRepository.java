@@ -87,6 +87,20 @@ public class MemoryBookingRepository implements BookingRepository {
      */
     @NonNull
     @Override
+    public Collection<Booking> getAll() {
+        lock.readLock().lock();
+        try {
+            return new ArrayList<>(bookingsById.values());
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
     public Set<Booking> getBookingsOfDay(final @NonNull Instant date) {
         // Convert the start and end instants into a date-instant
         final Instant start = date.truncatedTo(ChronoUnit.DAYS);
