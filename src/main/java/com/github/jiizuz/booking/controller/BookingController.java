@@ -254,6 +254,7 @@ public class BookingController {
 
         final Set<Booking> bookings = bookingRepository.getBookingsOfDay(date);
 
+        response.status(200);
         response.write(gsonToFormat.toJson(bookings));
     }
 
