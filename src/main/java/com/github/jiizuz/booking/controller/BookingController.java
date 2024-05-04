@@ -106,7 +106,13 @@ public class BookingController {
      */
     public CreateBookingRequest parseBookingRequest(final @NonNull MuRequest request, final @NonNull MuResponse response) throws IOException {
         try {
-            return gson.fromJson(request.readBodyAsString(), CreateBookingRequest.class);
+            final CreateBookingRequest bookingRequest = gson.fromJson(request.readBodyAsString(), CreateBookingRequest.class);
+            if (bookingRequest == null) {
+                response.status(400);
+                response.write(Response.of("The request body is invalid.", false).toJson(gson));
+                return null;
+            }
+            return bookingRequest;
         } catch (JsonSyntaxException exception) {
             response.status(400);
             response.write(Response.of("The request body is invalid.", false).toJson(gson));
