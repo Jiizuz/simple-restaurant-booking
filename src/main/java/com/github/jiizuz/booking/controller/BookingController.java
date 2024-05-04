@@ -151,7 +151,7 @@ public class BookingController {
             return false;
         }
         // Check if the restaurant is full at this time
-        final Set<Booking> currentBookings = bookingRepository.getBookingsBetween(booking.getDate(), booking.getDate().plus(Constants.TIME_SLOT));
+        final Set<Booking> currentBookings = bookingRepository.getBookingsBetween(booking.getDate().minus(Constants.TIME_SLOT), booking.getDate().plus(Constants.TIME_SLOT));
         if (currentBookings.size() >= Constants.TABLES) {
             response.status(400);
             response.write(Response.of("The restaurant is full at this time.", false).toJson(gson));
