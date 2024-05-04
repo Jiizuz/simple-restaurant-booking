@@ -5,6 +5,7 @@ import com.github.jiizuz.booking.booking.Booking;
 import com.github.jiizuz.booking.booking.ImmutableBooking;
 import com.github.jiizuz.booking.data.BookingRepository;
 import com.github.jiizuz.booking.data.BookingRepositoryFactory;
+import com.github.jiizuz.booking.gson.InstantTypeAdapter;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,17 +41,22 @@ public class BookingController {
     private final BookingRepository bookingRepository = BookingRepositoryFactory.getInstance();
 
     /**
+     * {@link GsonBuilder} to serialize and deserialize the requests and responses.
+     */
+    private final GsonBuilder gsonBuilder = new GsonBuilder()
+            .registerTypeAdapter(Instant.class, new InstantTypeAdapter())
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+
+    /**
      * {@link Gson} to serialize and deserialize the requests and responses.
      */
-    private final Gson gson = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+    private final Gson gson = gsonBuilder
             .create();
 
     /**
      * {@link Gson} to serialize and deserialize the requests and responses in a pretty format.
      */
-    private final Gson gsonPretty = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+    private final Gson gsonPretty = gsonBuilder
             .setPrettyPrinting()
             .create();
 
