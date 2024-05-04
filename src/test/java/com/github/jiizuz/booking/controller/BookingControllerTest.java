@@ -6,11 +6,13 @@ import com.github.jiizuz.booking.data.BookingRepository;
 import com.github.jiizuz.booking.data.BookingRepositoryFactory;
 import io.muserver.MuRequest;
 import io.muserver.MuResponse;
+import io.muserver.RequestParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -20,8 +22,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -141,10 +145,57 @@ public class BookingControllerTest {
         assertTrue(responseContent.contains("\"success\":false"), "Response should contain 'success':false");
     }
 
-//    when(request.query()).thenReturn(requestParameters);
-//    when(requestParameters.get()).thenReturn(pathParams);
-//    when(request.queryParam("date")).thenReturn("2021-01-01");
-//    when(request.queryParam("time")).thenReturn("12:00");
-//    when(request.queryParam("name")).thenReturn("Jiizuz");
-//        controller.createBooking();
+    @Test
+    public void whenGetBookingsOfDay_thenBookingsAreReturned() {
+        MuRequest request = mock(MuRequest.class);
+        MuResponse response = mock(MuResponse.class);
+        RequestParameters requestParameters = mock(RequestParameters.class);
+        Set<Booking> bookings = new HashSet<>();
+
+        when(request.query()).thenReturn(requestParameters);
+        when(requestParameters.get("date")).thenReturn("2024-05-01");
+        when(requestParameters.contains("pretty")).thenReturn(false);
+
+        when(repository.getBookingsOfDay(any(Instant.class))).thenReturn(bookings);
+        ArgumentCaptor<String> responseCaptor = ArgumentCaptor.forClass(String.class);
+
+        controller.getBookingsOfDay(request, response, new HashMap<>(0));
+
+        verify(repository).getBookingsOfDay(any(Instant.class));
+        verify(response).status(200);
+        verify(response).write(responseCaptor.capture());
+
+        String responseContent = responseCaptor.getValue();
+        assertEquals("[]", responseContent, "Response should be an empty array");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @CsvSource({
+            "''", // Empty date
+            "20240501", // Incorrect date format
+            "2024-0501", // Incorrect date format
+            "24-05-01", // Incorrect date format
+            "2024/05/01", // Incorrect date format
+    })
+    public void whenGetBookingsOfDay_thenErrorIsReturned(final String date) {
+        MuRequest request = mock(MuRequest.class);
+        MuResponse response = mock(MuResponse.class);
+        RequestParameters requestParameters = mock(RequestParameters.class);
+
+        when(request.query()).thenReturn(requestParameters);
+        when(requestParameters.get("date")).thenReturn(date);
+
+        ArgumentCaptor<String> responseCaptor = ArgumentCaptor.forClass(String.class);
+
+        controller.getBookingsOfDay(request, response, new HashMap<>(0));
+
+        verify(requestParameters, times(0)).contains("pretty");
+        verify(repository, times(0)).getBookingsOfDay(any(Instant.class));
+        verify(response).status(400);
+        verify(response).write(responseCaptor.capture());
+
+        String responseContent = responseCaptor.getValue();
+        assertTrue(responseContent.contains("\"success\":false"), "Response should contain 'success':false");
+    }
 }
