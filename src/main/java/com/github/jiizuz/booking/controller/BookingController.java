@@ -31,6 +31,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class BookingController {
 
+    // TODO Jiizuz: 5/3/2024 Split this controller into two controllers, one for each handler
+
     /**
      * Repository to store/retrieve the bookings.
      */
